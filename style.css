@@ -1,14 +1,14 @@
 :root {
   /* 레몬 톤 테마 */
-  --bg: #FFFDF2;          /* 전체 배경 레몬빛 */
-  --card: #FFFFFFCC;      /* 말랑 카드 배경 */
-  --accent: #FFD94A;      /* 메인 포인트 레몬 옐로우 */
-  --accent-soft: #FFF1AA; /* 부드러운 연한 레몬 */
-  --border: #F3E3A6;      /* 옅은 레몬 베이지 보더 */
-  --text-main: #2F2505;   /* 기본 텍스트 (딥 브라운) */
-  --text-sub: #7A6A3A;    /* 서브 텍스트 */
-  --pill: #FFF7C2;        /* pill형 태그 배경 */
-  --shadow-soft: 0 10px 30px rgba(0,0,0,0.05);
+  --bg: #fffdf2; /* 전체 배경 레몬빛 */
+  --card: #ffffffcc; /* 말랑 카드 배경 */
+  --accent: #ffd94a; /* 메인 포인트 레몬 옐로우 */
+  --accent-soft: #fff1aa; /* 부드러운 연한 레몬 */
+  --border: #f3e3a6; /* 옅은 레몬 베이지 보더 */
+  --text-main: #2f2505; /* 기본 텍스트 (딥 브라운) */
+  --text-sub: #7a6a3a; /* 서브 텍스트 */
+  --pill: #fff7c2; /* pill형 태그 배경 */
+  --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.05);
   --radius-lg: 20px;
   --radius-pill: 999px;
   --nav-height: 64px;
@@ -16,7 +16,7 @@
 
 * {
   box-sizing: border-box;
-  font-family: 'Noto Sans', sans-serif;
+  font-family: "Noto Sans", sans-serif;
 }
 
 body {
@@ -78,14 +78,14 @@ body {
 }
 
 .nav-link:hover {
-  background: #FFF7C2;
-  color: #2F2505;
+  background: #fff7c2;
+  color: #2f2505;
 }
 
 .nav-link.active {
-  background: #FFF1AA;
-  color: #2F2505;
-  border-color: #F2C633;
+  background: #fff1aa;
+  color: #2f2505;
+  border-color: #f2c633;
 }
 
 /* ================= LAYOUT / SCROLL ================= */
@@ -100,17 +100,22 @@ main {
   scroll-behavior: smooth;
 
   /* 스크롤바 숨기기 */
-  scrollbar-width: none;      /* Firefox */
+  scrollbar-width: none; /* Firefox */
+
+  /* 부드러운 섹션 스냅 */
+  scroll-snap-type: y proximity;
+  scroll-padding-top: var(--nav-height);
 }
 
 main::-webkit-scrollbar {
-  display: none;              /* Chrome, Edge, Safari */
+  display: none; /* Chrome, Edge, Safari */
 }
 
 section {
   min-height: calc(100vh - var(--nav-height));
   display: flex;
   align-items: center;
+  scroll-snap-align: start;
 }
 
 .section-inner {
@@ -173,9 +178,9 @@ section {
   padding: 4px 10px;
   border-radius: var(--radius-pill);
   background: var(--pill);
-  border: 1px solid #F3E3A6;
+  border: 1px solid #f3e3a6;
   font-size: 12px;
-  color: #7A6A3A;
+  color: #7a6a3a;
 }
 
 .home-cta {
@@ -184,9 +189,9 @@ section {
   padding: 8px 14px;
   border-radius: var(--radius-pill);
   background: var(--accent);
-  border: 1px solid #F2C633;
+  border: 1px solid #f2c633;
   font-size: 13px;
-  color: #2F2505;
+  color: #2f2505;
   text-decoration: none;
   transition: filter 0.15s ease, transform 0.1s ease;
 }
@@ -239,7 +244,7 @@ section {
   margin: 0 0 6px;
   font-size: 13px;
   font-weight: 600;
-  color: #7A6A3A;
+  color: #7a6a3a;
 }
 
 .info-block ul {
@@ -283,14 +288,14 @@ section {
 .work-year {
   font-size: 12px;
   font-weight: 600;
-  color: #7A6A3A;
+  color: #7a6a3a;
   margin-bottom: 4px;
 }
 
 .work-card {
   background: #fff;
   border-radius: 16px;
-  border: 1px solid #F3E3A6;
+  border: 1px solid #f3e3a6;
   padding: 10px 12px 8px;
   font-size: 12px;
 }
@@ -309,7 +314,7 @@ section {
 
 .work-name {
   font-weight: 600;
-  color: #2F2505;
+  color: #2f2505;
 }
 
 .work-detail {
@@ -334,16 +339,16 @@ section {
   gap: 20px;
 }
 
-/* 카드 너비 줄인 후에도 말랑하게 유지 */
 .project-card {
   background: var(--card);
   border-radius: var(--radius-lg);
   border: 1px solid var(--border);
   box-shadow: var(--shadow-soft);
   padding: 18px 16px 16px;
+
   display: flex;
-  flex-direction: column;   /* 버튼을 아래로 보내기 위한 구조 */
-  justify-content: space-between; /* 설명이 짧아도 버튼이 하단으로 */
+  flex-direction: column;
+  justify-content: space-between;
   height: 100%;
 }
 
@@ -353,19 +358,19 @@ section {
 }
 
 .project-desc {
-  margin: 0 0 10px;
+  margin: 0;
   font-size: 13px;
   color: var(--text-sub);
   line-height: 1.6;
 }
 
+/* 버튼을 카드 하단 좌측 고정 */
+
 .project-buttons {
-  margin-top: auto;      /* 카드 하단으로 밀어내기 */
-  padding-top: 10px;     /* 텍스트와 살짝 여백 */
+  margin-top: auto;
+  padding-top: 10px;
   display: flex;
   gap: 8px;
-  flex-wrap: wrap;
-  justify-content: flex-start;
 }
 
 .btn {
@@ -373,7 +378,7 @@ section {
   align-items: center;
   padding: 6px 12px;
   border-radius: var(--radius-pill);
-  border: 1px solid #E9D89F;
+  border: 1px solid #e9d89f;
   font-size: 12px;
   text-decoration: none;
   color: var(--text-main);
@@ -383,12 +388,12 @@ section {
 
 .btn.primary {
   background: var(--accent);
-  border-color: #F2C633;
-  color: #2F2505;
+  border-color: #f2c633;
+  color: #2f2505;
 }
 
 .btn:hover {
-  filter: darkness(0.97);
+  filter: brightness(0.97);
   transform: translateY(-1px);
 }
 
@@ -470,7 +475,6 @@ section {
   }
 
   .portfolio-grid {
-    grid-template-columns: 1fr; /* 모바일에서는 1열 */
+    grid-template-columns: 1fr; /* 모바일에서는 한 줄에 한 개 */
   }
 }
-
