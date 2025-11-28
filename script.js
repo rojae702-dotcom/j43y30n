@@ -15,12 +15,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (!main || sections.length === 0) return;
 
-  // 현재 섹션 인덱스 상태
   let currentIndex = 0;
   let isAutoScrolling = false;
   let wheelTimer = null;
 
   function getSectionOffset(section) {
+    // main 내부에서의 섹션 시작 위치
     return section.offsetTop - main.offsetTop;
   }
 
@@ -37,18 +37,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setActiveIndex(index);
 
-    // 스크롤 애니메이션 끝났다고 가정
+    // 스크롤 애니메이션이 끝났다고 가정하는 타이밍
     setTimeout(() => {
       isAutoScrolling = false;
     }, 600);
   }
 
   function setActiveIndex(index) {
+    if (index < 0 || index >= sections.length) return;
     currentIndex = index;
 
     const activeId = "#" + sections[index].id;
 
-    // nav 메뉴 active
+    // 상단 메뉴 active
     navMenuLinks.forEach(link => {
       if (link.getAttribute("href") === activeId) {
         link.classList.add("active");
@@ -68,12 +69,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function getClosestSectionIndex(scrollTop) {
+    // 뷰포트 중앙 기준으로 가장 가까운 섹션 찾기
+    const center = scrollTop + main.clientHeight / 2;
     let closestIndex = 0;
     let minDiff = Infinity;
 
     sections.forEach((sec, i) => {
       const pos = getSectionOffset(sec);
-      const diff = Math.abs(pos - scrollTop);
+      const diff = Math.abs(pos - center);
       if (diff < minDiff) {
         minDiff = diff;
         closestIndex = i;
@@ -83,7 +86,6 @@ document.addEventListener("DOMContentLoaded", () => {
     return closestIndex;
   }
 
-  // 네비/버튼 클릭 → 부드러운 섹션 이동
   function handleAnchorClick(targetId) {
     const targetSection = document.querySelector(targetId);
     if (!targetSection) return;
@@ -94,19 +96,20 @@ document.addEventListener("DOMContentLoaded", () => {
     scrollToSectionIndex(index);
   }
 
+  // 네비/홈 CTA 클릭 → 섹션으로 부드럽게 이동
   navLinks.forEach(link => {
     link.addEventListener("click", (e) => {
       const targetId = link.getAttribute("href");
       if (!targetId || targetId === "#") return;
 
-      const isInternal = targetId.startsWith("#");
-      if (!isInternal) return;
+      if (!targetId.startsWith("#")) return; // 외부 링크는 무시
 
       e.preventDefault();
       handleAnchorClick(targetId);
     });
   });
 
+  // 도트 클릭 → 섹션 이동
   dotButtons.forEach(dot => {
     dot.addEventListener("click", () => {
       const targetId = dot.dataset.target;
@@ -115,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // 휠/트랙패드 → 섹션 단위 부드러운 이동
+  // 휠/트랙패드 → 섹션 단위 이동 (반응형 높이에서도 index 기준)
   main.addEventListener("wheel", (e) => {
     if (isAutoScrolling) return;
 
@@ -124,23 +127,31 @@ document.addEventListener("DOMContentLoaded", () => {
 
     wheelTimer = setTimeout(() => {
       let targetIndex = currentIndex + direction;
-
       if (targetIndex < 0) targetIndex = 0;
       if (targetIndex >= sections.length) targetIndex = sections.length - 1;
       if (targetIndex === currentIndex) return;
 
       scrollToSectionIndex(targetIndex);
-    }, 120); // 사용자가 휠을 멈춘 후 살짝 기다렸다가 이동
+    }, 120); // 사용자가 휠을 멈춘 느낌일 때만 동작
   });
 
-  // 일반 스크롤(드래그 등)에도 active 동기화
+  // 일반 스크롤(끌어내리기 등)에도 active 동기화
   main.addEventListener("scroll", () => {
     if (isAutoScrolling) return;
     const scrollTop = main.scrollTop;
-    const idx = getClosestSectionIndex(scrollTop + 1);
+    const idx = getClosestSectionIndex(scrollTop);
     setActiveIndex(idx);
   });
 
-  // 초기 active 설정
+  // 창 크기 변경 시에도 현재 뷰포트 위치 기준으로 가장 가까운 섹션 재계산
+  window.addEventListener("resize", () => {
+    const scrollTop = main.scrollTop;
+    const idx = getClosestSectionIndex(scrollTop);
+    setActiveIndex(idx);
+    // 필요하면 아래처럼 리얼라인도 가능 (지금은 움직임이 튀지 않게 주석)
+    // scrollToSectionIndex(idx);
+  });
+
+  // 초기 상태
   setActiveIndex(0);
 });
